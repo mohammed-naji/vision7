@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\FormsController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\Site1Controller;
 use App\Http\Controllers\Site2Controller;
+use App\Http\Controllers\Site3Controller;
 use Illuminate\Support\Facades\Route;
 
 // use, namespace
@@ -86,3 +88,15 @@ Route::prefix('site2')->name('site2.')->group(function() {
     Route::get('/contact-me', [Site2Controller::class, 'contact'])->name('contact');
     Route::get('/post', [Site2Controller::class, 'post'])->name('post');
 });
+
+Route::prefix('site3')->name('site3.')->group(function() {
+    Route::get('/', [Site3Controller::class, 'about'])->name('about');
+    Route::get('/experiance', [Site3Controller::class, 'experiance'])->name('experiance');
+    Route::get('/education', [Site3Controller::class, 'education'])->name('education');
+    Route::get('/skills', [Site3Controller::class, 'skills'])->name('skills');
+    Route::get('/interests', [Site3Controller::class, 'interests'])->name('interests');
+    Route::get('/awards', [Site3Controller::class, 'awards'])->name('awards');
+});
+
+Route::get('form1', [FormsController::class, 'form1'])->name('form1');
+Route::post('form1', [FormsController::class, 'form1_data']);
