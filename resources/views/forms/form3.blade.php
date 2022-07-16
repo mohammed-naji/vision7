@@ -17,7 +17,7 @@
 
         @include('forms.errors')
 
-        <form action="{{ route('form3_date') }}" method="POST">
+        <form action="{{ route('form3_data') }}" method="POST">
             @csrf
             <div class="mb-3">
                 <label>Title</label>

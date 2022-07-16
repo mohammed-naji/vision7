@@ -12,7 +12,7 @@
     <div class="container mt-5">
         <h1>Register new account</h1>
         @include('forms.errors')
-        <form action="{{ route('form2_date') }}" method="POST">
+        <form action="{{ route('form2_data') }}" method="POST">
             @csrf
             <div class="mb-3">
                 <label>Name</label>
