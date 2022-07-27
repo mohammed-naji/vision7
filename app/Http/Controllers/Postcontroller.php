@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class Postcontroller extends Controller
 {
@@ -42,5 +43,45 @@ class Postcontroller extends Controller
 
 
         return view('posts.index', compact('posts'));
+    }
+
+    public function create()
+    {
+        return view('posts.create');
+    }
+
+    public function store(Request $request)
+    {
+        // Validation
+        $request->validate([
+            'title' => 'required|min:5|max:50',
+            'image' => 'required|image|mimes:png,jpg,jpeg,gif,svg',
+            'body' => 'required'
+        ]);
+
+        // Upload File
+        $img = $request->file('image');
+        $img_name = rand().time().$img->getClientOriginalName();
+        $img->move(public_path('uploads'), $img_name);
+
+        // Save to Database
+        Post::create([
+            'title' => $request->title,
+            'image' => $img_name,
+            'body' => $request->body,
+        ]);
+
+        return redirect()->route('posts.index')->with('msg', 'Post created successfully')->with('type', 'success');
+    }
+
+    public function destroy($id)
+    {
+        // Post::destroy($id);
+        $post = Post::find($id);
+
+        File::delete(public_path('uploads/'.$post->image));
+
+        $post->delete();
+        return redirect()->route('posts.index')->with('msg', 'Post deleted successfully')->with('type', 'danger');
     }
 }

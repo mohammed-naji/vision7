@@ -10,4 +10,6 @@ class Post extends Model
     use HasFactory;
 
     // protected $table = 'old_posts';
+
+    protected $fillable = ['title', 'body', 'image'];
 }

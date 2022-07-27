@@ -132,3 +132,8 @@ D => Delete
 */
 
 Route::get('posts', [Postcontroller::class, 'index'])->name('posts.index');
+
+Route::get('posts/create', [Postcontroller::class, 'create'])->name('posts.create');
+Route::post('posts/create', [Postcontroller::class, 'store'])->name('posts.store');
+
+Route::delete('posts/{id}/destroy', [Postcontroller::class, 'destroy'])->name('posts.destroy');
