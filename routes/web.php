@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FormsController;
 use App\Http\Controllers\MailsController;
 use App\Http\Controllers\MainController;
@@ -131,9 +132,15 @@ D => Delete
 
 */
 
-Route::get('posts', [Postcontroller::class, 'index'])->name('posts.index');
+// Route::get('posts', [Postcontroller::class, 'index'])->name('posts.index');
 
-Route::get('posts/create', [Postcontroller::class, 'create'])->name('posts.create');
-Route::post('posts/create', [Postcontroller::class, 'store'])->name('posts.store');
+// Route::get('posts/create', [Postcontroller::class, 'create'])->name('posts.create');
+// Route::post('posts/create', [Postcontroller::class, 'store'])->name('posts.store');
 
-Route::delete('posts/{id}/destroy', [Postcontroller::class, 'destroy'])->name('posts.destroy');
+// Route::delete('posts/{id}/destroy', [Postcontroller::class, 'destroy'])->name('posts.destroy');
+
+// Route::get('posts/{id}/edit', [Postcontroller::class, 'edit'])->name('posts.edit');
+// Route::put('posts/{id}/update', [Postcontroller::class, 'update'])->name('posts.update');
+
+Route::resource('posts', Postcontroller::class);
+Route::resource('categories', CategoryController::class);

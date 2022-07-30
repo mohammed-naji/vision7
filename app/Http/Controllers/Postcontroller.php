@@ -74,6 +74,18 @@ class Postcontroller extends Controller
         return redirect()->route('posts.index')->with('msg', 'Post created successfully')->with('type', 'success');
     }
 
+    // Normal Form Delete
+    // public function destroy($id)
+    // {
+    //     // Post::destroy($id);
+    //     $post = Post::find($id);
+
+    //     File::delete(public_path('uploads/'.$post->image));
+
+    //     $post->delete();
+    //     return redirect()->route('posts.index')->with('msg', 'Post deleted successfully')->with('type', 'danger');
+    // }
+
     public function destroy($id)
     {
         // Post::destroy($id);
@@ -82,6 +94,47 @@ class Postcontroller extends Controller
         File::delete(public_path('uploads/'.$post->image));
 
         $post->delete();
-        return redirect()->route('posts.index')->with('msg', 'Post deleted successfully')->with('type', 'danger');
+
+        $posts = Post::orderByDesc('id')->paginate(20);
+        return view('posts.table', compact('posts'))->render();
+    }
+
+    public function edit($id)
+    {
+        // $post = Post::find($id);
+        // if(!$post) {
+        //     abort(404);
+        // }
+        $post = Post::findOrFail($id);
+
+        return view('posts.edit', compact('post'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        // Validation
+        $request->validate([
+            'title' => 'required|min:5|max:50',
+            'image' => 'nullable|image|mimes:png,jpg,jpeg,gif,svg',
+            'body' => 'required'
+        ]);
+
+        $post = Post::findOrFail($id);
+        $img_name = $post->image;
+        if($request->hasFile('image')) {
+            // Upload File
+            $img = $request->file('image');
+            $img_name = rand().time().$img->getClientOriginalName();
+            $img->move(public_path('uploads'), $img_name);
+        }
+
+        // Save to Database
+        $post->update([
+            'title' => $request->title,
+            'image' => $img_name,
+            'body' => $request->body,
+        ]);
+
+        return redirect()->route('posts.index')->with('msg', 'Post updated successfully')->with('type', 'warning');
     }
 }

@@ -41,69 +41,60 @@
               </div>
         </form>
         {{-- {{ $posts->count() }} --}}
-        <table class="table table-bordered table-hover table-striped">
-            <tr class="table-dark">
-                <th>ID</th>
-                <th>Title</th>
-                <th>Image</th>
-                <th>Viewer</th>
-                <th>Created At</th>
-                <th>Updated At</th>
-                <th>Actions</th>
-            </tr>
-            @forelse ($posts as $post)
-            <tr>
-                <td>{{ $post->id }}</td>
-                <td>{{ $post->title }}</td>
-                <td><img width="80" src="{{ asset('uploads/'.$post->image) }}" alt=""></td>
-                <td>{{ $post->viewer }}</td>
-                <td>{{ $post->created_at->format('M d, Y') }}</td>
-                <td>{{ $post->updated_at->diffForHumans() }}</td>
-                <td>
-                    <a class="btn btn-sm btn-primary" href="#"><i class="fas fa-edit"></i></a>
-                    {{-- <a class="btn btn-sm btn-danger" href="#"><i class="fas fa-trash"></i></a> --}}
-                    <form class="d-inline" action="{{ route('posts.destroy', $post->id) }}" method="post">
-                        @csrf
-                        @method('delete')
-                        <button onclick="return confirm('Are you sure?!')" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                    </form>
-                </td>
-            </tr>
-            @empty
-                <tr>
-                    <td colspan="7" class="text-center">No Data Avilable</td>
-                </tr>
-            @endforelse
-
-            {{-- @if ($posts->count())
-                @foreach ($posts as $post)
-                <tr>
-                    <td>{{ $post->id }}</td>
-                    <td>{{ $post->title }}</td>
-                    <td><img width="100" src="{{ $post->image }}" alt=""></td>
-                    <td>{{ $post->viewer }}</td>
-                    <td>{{ $post->created_at->format('M d, Y') }}</td>
-                    <td>{{ $post->updated_at->diffForHumans() }}</td>
-                    <td>
-                        <a class="btn btn-sm btn-primary" href="#"><i class="fas fa-edit"></i></a>
-                        <a class="btn btn-sm btn-danger" href="#"><i class="fas fa-trash"></i></a>
-                    </td>
-                </tr>
-                @endforeach
-            @else
-            <tr>
-                <td colspan="7" class="text-center">No Data Found</td>
-            </tr>
-            @endif --}}
-
-        </table>
-        {{-- {{ $posts->appends(['search' => request()->search, 'count' => request()->count])->links() }} --}}
-        {{ $posts->appends($_GET)->links() }}
+        <div class="table-content">
+            @include('posts.table')
+        </div>
         {{-- <i class="fab fa-facebook"></i>
         <i class="fas fa-star"></i>
         <i class="far fa-star"></i> --}}
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script>
+            $('body').on('click', '.btn-del', function(event) {
+                event.preventDefault();
+
+                var url = $(this).parent().attr('action');
+                var row = $(this).parents('tr');
+
+                // console.log(url);
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            type: 'post',
+                            data: {
+                            _token: '{{ csrf_token() }}',
+                            _method: 'delete'
+                            },
+                            success: function(res) {
+                                $('.table-content').html(res);
+                            },
+                            error: function(err) {
+
+                            }
+                        })
+
+                    }
+                    })
+
+
+            });
+            // $('.btn-del').click(function() {
+
+            // })
+        </script>
 
         <script>
             @if (session('msg'))
