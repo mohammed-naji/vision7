@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -13,7 +14,22 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $count = 20;
+        if(request()->has('count') && request()->count != 'all') {
+            $count = request()->count;
+        }
+
+        if(request()->has('count') && request()->count == 'all') {
+            $count = Category::count();
+        }
+
+        if(request()->has('search')) {
+            $categories = Category::where('title', 'like', '%' . request()->search . '%')->orWhere('body', 'like', '%' . request()->search . '%')->orderByDesc('id')->paginate($count);
+        }else {
+            $categories = Category::orderByDesc('id')->paginate($count);
+        }
+
+        return view('categories.index', compact('categories'));
     }
 
     /**
@@ -23,7 +39,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        $category = new Category();
+        return view('categories.create', compact('category'));
     }
 
     /**
@@ -34,7 +51,17 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validation
+        $request->validate([
+            'name' => 'required|min:5|max:50',
+        ]);
+
+        // Save to Database
+        Category::create([
+            'name' => $request->name,
+        ]);
+
+        return redirect()->route('categories.index')->with('msg', 'Category created successfully')->with('type', 'success');
     }
 
     /**
@@ -56,7 +83,9 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        $category = Category::findOrFail($id);
+
+        return view('categories.edit', compact('category'));
     }
 
     /**
@@ -68,7 +97,17 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // Validation
+        $request->validate([
+            'name' => 'required|min:5|max:50',
+        ]);
+
+        // Save to Database
+        Category::find($id)->update([
+            'name' => $request->name,
+        ]);
+
+        return redirect()->route('categories.index')->with('msg', 'Category updated successfully')->with('type', 'info');
     }
 
     /**
@@ -79,6 +118,9 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Category::destroy($id);
+
+        $categories = Category::orderByDesc('id')->paginate(20);
+        return view('categories.table', compact('categories'))->render();
     }
 }

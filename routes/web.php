@@ -5,6 +5,7 @@ use App\Http\Controllers\FormsController;
 use App\Http\Controllers\MailsController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\Postcontroller;
+use App\Http\Controllers\RelationController;
 use App\Http\Controllers\Site1Controller;
 use App\Http\Controllers\Site2Controller;
 use App\Http\Controllers\Site3Controller;
@@ -144,3 +145,5 @@ D => Delete
 
 Route::resource('posts', Postcontroller::class);
 Route::resource('categories', CategoryController::class);
+
+Route::get('one-to-one', [RelationController::class, 'one_to_one'])->name('one_to_one');
