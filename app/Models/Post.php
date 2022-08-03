@@ -12,4 +12,9 @@ class Post extends Model
     // protected $table = 'old_posts';
 
     protected $fillable = ['title', 'body', 'image'];
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

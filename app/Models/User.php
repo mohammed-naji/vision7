@@ -44,6 +44,6 @@ class User extends Authenticatable
 
     public function insurance()
     {
-        return $this->hasOne(Insurance::class)->withDefault();
+        return $this->hasOne(Insurance::class, 'user_id')->withDefault();
     }
 }
