@@ -143,7 +143,11 @@ D => Delete
 // Route::get('posts/{id}/edit', [Postcontroller::class, 'edit'])->name('posts.edit');
 // Route::put('posts/{id}/update', [Postcontroller::class, 'update'])->name('posts.update');
 
+Route::get('posts/trash', [Postcontroller::class, 'trash'])->name('posts.trash');
+Route::get('posts/{id}/restore', [Postcontroller::class, 'restore'])->name('posts.restore');
+Route::delete('posts/{id}/delete', [Postcontroller::class, 'delete'])->name('posts.delete');
 Route::resource('posts', Postcontroller::class);
+
 Route::resource('categories', CategoryController::class);
 
 Route::get('one-to-one', [RelationController::class, 'one_to_one'])->name('one_to_one');
@@ -153,3 +157,8 @@ Route::post('one-to-many', [RelationController::class, 'one_to_many_data'])->nam
 
 Route::get('many-to-many', [RelationController::class, 'many_to_many'])->name('many_to_many');
 Route::post('many-to-many', [RelationController::class, 'many_to_many_data'])->name('many_to_many_data');
+
+
+Route::get('new-mail', [MailsController::class, 'new_mail']);
+
+Route::get('/custom-posts', [MainController::class, 'custom_posts'])->name('custom_posts');

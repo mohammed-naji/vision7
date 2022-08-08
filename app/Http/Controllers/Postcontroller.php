@@ -45,6 +45,13 @@ class Postcontroller extends Controller
         return view('posts.index', compact('posts'));
     }
 
+    public function trash()
+    {
+        $posts = Post::onlyTrashed()->get();
+
+        return view('posts.trash', compact('posts'));
+    }
+
     public function create()
     {
         $post = new Post();
@@ -137,5 +144,19 @@ class Postcontroller extends Controller
         ]);
 
         return redirect()->route('posts.index')->with('msg', 'Post updated successfully')->with('type', 'warning');
+    }
+
+    public function restore($id)
+    {
+        $post = Post::withTrashed()->findOrFail($id);
+        $post->restore();
+        return redirect()->route('posts.trash')->with('msg', 'Post restored successfully')->with('type', 'warning');
+    }
+
+    public function delete($id)
+    {
+        $post = Post::withTrashed()->findOrFail($id);
+        $post->forceDelete();
+        return redirect()->route('posts.trash')->with('msg', 'Post deleted permanintly successfully')->with('type', 'warning');
     }
 }

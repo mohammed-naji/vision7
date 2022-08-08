@@ -55,5 +55,4 @@
     @endif --}}
 
 </table>
-{{-- {{ $posts->appends(['search' => request()->search, 'count' => request()->count])->links() }} --}}
 {{ $posts->appends($_GET)->links() }}
